@@ -1,6 +1,10 @@
 import React from 'react';
-import 'bootswatch/dist/flatly/bootstrap.css'
+
 import Login from './views/Login';
+import CadastroUsuario from './views/CadastroUsuario';
+
+import 'bootswatch/dist/flatly/bootstrap.css'
+import './custom.css';
 
 class App extends React.Component {
 
@@ -8,7 +12,8 @@ class App extends React.Component {
 
     return (
      <div>
-        <Login />
+        <CadastroUsuario />
+
      </div>
     );
   }
