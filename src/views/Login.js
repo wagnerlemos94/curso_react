@@ -2,7 +2,7 @@ import React from 'react';
 import Card from '../components/Card';
 import FormGroup from '../components/Form-group';
 import { withRouter } from 'react-router-dom';
-import axios from 'axios';
+import UsuarioSerice from '../app/service/usuarioService';
 
 
 class Login extends React.Component{
@@ -13,8 +13,13 @@ class Login extends React.Component{
         mensagemErro: null,
     }
 
+    constructor(){
+        super();
+        this.service = new UsuarioSerice;
+    }
+    
     entrar = () => {
-        axios.post('http://localhost:8080/api/usuarios/autenticar',{
+        this.service.autenticar({
             email: this.state.email,
             senha: this.state.senha
         }).then(response => {
