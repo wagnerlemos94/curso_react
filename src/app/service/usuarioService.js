@@ -8,6 +8,10 @@ class UsuarioSerice extends ApiService{
     autenticar(credencias){
         return this.post('/autenticar', credencias);
     }
+
+    obeterSaldoPorUsuario(id){
+        return this.get(`/${id}/saldo`);
+    }
 }
 
 export default UsuarioSerice;
