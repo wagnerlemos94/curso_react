@@ -12,6 +12,10 @@ class UsuarioSerice extends ApiService{
     obeterSaldoPorUsuario(id){
         return this.get(`/${id}/saldo`);
     }
+
+    salvar(usuario){
+        return this.post('/', usuario);
+    }
 }
 
 export default UsuarioSerice;
