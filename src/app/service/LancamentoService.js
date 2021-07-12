@@ -23,13 +23,17 @@ export default class LancamentoService extends ApiService{
            ]
         }
 
-        obterListaTipos(){
-            return [
-                { label: 'Selecione..', value: ''},
-                { label: 'DESPESA', value: 'DESPESA'},
-                { label: 'RECEITA', value: 'RECEITA'},
-            ]
-        }
+    obterListaTipos(){
+        return [
+            { label: 'Selecione..', value: ''},
+            { label: 'DESPESA', value: 'DESPESA'},
+            { label: 'RECEITA', value: 'RECEITA'},
+        ]
+    }
+
+    salvar(lancamento){
+        return this.post('/', lancamento);
+    }
 
     consultar(lancamentoFiltro){
         let params = `?ano=${lancamentoFiltro.ano}`

@@ -6,13 +6,45 @@ import FormGroup from '../../components/Form-group';
 import SelectMenu from '../SelectMenu';
 
 import LancamentoService from '../../app/service/LancamentoService';
+import * as messages from '../../components/toastr';
+import LocalStorageService from '../../app/service/localStorageService';
 
 
 class CadastroLancamentos extends React.Component{
     
+    state = {
+        id:null,
+        descricao:'',
+        mes:'',
+        ano:'',
+        tipo:'',
+        status:''
+    }
+
     constructor(){
         super();
         this.service = new LancamentoService;
+    }
+
+    submit = () => {
+
+        const usuarioLogado = LocalStorageService.obterItem('_usuario_logado');
+        
+        const { descricao, valor, mes, ano, tipo } = this.state;
+        const lancamento = {descricao, valor, mes, ano, tipo, usuario: usuarioLogado.id}
+
+        this.service.salvar(lancamento).then(response => {
+            messages.mensagemSucesso('Lancamento cadastrado com sucesso!');
+        }).catch(erro => {
+            messages.mensagemErro(erro.response.data);
+        });
+    }
+
+    handleChange = (event) => {
+        const value = event.target.value;
+        const name = event.target.name;
+
+        this.setState({[name]:value});
     }
     
     render(){
@@ -23,43 +55,72 @@ class CadastroLancamentos extends React.Component{
                 <div className="row">
                     <div className="col-md-12">
                         <FormGroup id="inputDescricao" label="Descrição: *">
-                            <input id="inputDescricao" type="text" className="form-control" />
+                            <input id="inputDescricao"
+                            type="text"
+                            className="form-control"
+                            name="descricao"
+                            value={this.setState.descricao}
+                            onChange={this.handleChange} />
                         </FormGroup>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-6">
                         <FormGroup id="inputAno" label="Ano: *">
-                            <input id="inputAno" type="text" className="form-control" />
+                            <input id="inputAno"
+                            type="text"
+                            className="form-control"
+                            name="ano"
+                            value={this.setState.ano}
+                            onChange={this.handleChange} />
                         </FormGroup>
                     </div>
                     <div className="col-md-6">
                         <FormGroup id="inputMes" label="Mes: *">
-                            <SelectMenu id="inputMes" lista={meses} className="form-control"/>
+                            <SelectMenu id="inputMes"
+                            name="mes"
+                            value={this.setState.mes}
+                            onChange={this.handleChange}
+                            lista={meses}
+                            className="form-control"/>
                         </FormGroup>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-4">
                         <FormGroup id="inputvalor" label="valor: *">
-                            <input id="inputvalor" type="text" className="form-control" />
+                            <input id="inputvalor"
+                            type="text"
+                            name="valor"
+                            value={this.setState.valor}
+                            onChange={this.handleChange}
+                            className="form-control" />
                         </FormGroup>
                     </div>
                     <div className="col-md-4">
                         <FormGroup id="inputTipo" label="Tipo: *">
-                            <SelectMenu id="inputTipo" lista={tipos} className="form-control"/>
+                            <SelectMenu id="inputTipo"
+                            name="tipo"
+                            value={this.setState.tipo}
+                            onChange={this.handleChange}
+                            lista={tipos}
+                            className="form-control"/>
                         </FormGroup>
                     </div>
                     <div className="col-md-4">
                         <FormGroup id="inputStatus" id="inputStatus" label="Status: *">
-                            <input type="text" className="form-control" disabled/>
+                            <input type="text"
+                            name="status"
+                            value={this.setState.status}
+                            className="form-control"
+                            disabled/>
                         </FormGroup>
                     </div>
                 </div>
                 <br />
                 <div className="row">
                     <div className="col-md-6">
-                        <button className="btn btn-success">Salvar</button>
+                        <button onClick={this.submit} className="btn btn-success">Salvar</button>
                         <button className="btn btn-danger">Cancelar</button>
                     </div>
                 </div>
