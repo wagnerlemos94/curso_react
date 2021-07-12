@@ -8,6 +8,8 @@ import LancamentoTable from './LancamentoTable';
 import LancamentoService from '../../app/service/LancamentoService';
 import LocalStorageService from '../../app/service/localStorageService';
 
+import * as messages from '../../components/toastr';
+
 
 class ConsultaLancamento extends React.Component{
 
@@ -15,6 +17,7 @@ class ConsultaLancamento extends React.Component{
         ano: '',
         mes: '',
         tipo: '',
+        descricao:'',
         lancamentos:[]
     }
 
@@ -25,6 +28,10 @@ class ConsultaLancamento extends React.Component{
 
 
     buscar = () =>{
+        if(!this.state.ano){
+            messages.mensagemErro("O preenchimento do campo Ano é obrigatório!")
+            return false;
+        }
         const usuarioLogado = LocalStorageService.obterItem('_usuario_logado');
 
         
@@ -32,12 +39,13 @@ class ConsultaLancamento extends React.Component{
             ano: this.state.ano,
             mes: this.state.mes,
             tipo: this.state.tipo,
+            descricao: this.state.descricao,
             usuario: usuarioLogado.id
         }
         
         this.service
             .consultar(lancamentoFiltro)
-            .then(response => {
+            .then(response => {                          
             this.setState({lancamentos: response.data})
             }).catch(erro => {
                 console.log(erro)
@@ -45,28 +53,18 @@ class ConsultaLancamento extends React.Component{
         
     }
 
-    render(){
-        const mes = [
-         { label: 'Selecione..', value: ''},
-         { label: 'Janeiro', value: '1'},
-         { label: 'Feverreiro', value: '2'},
-         { label: 'Março', value: '3'},
-         { label: 'Abril', value: '4'},
-         { label: 'Maio', value: '5'},
-         { label: 'Junho', value: '6'},
-         { label: 'Julho', value: '7'},
-         { label: 'Agosto', value: '8'},
-         { label: 'Setembro', value: '9'},
-         { label: 'Outrubro', value: '10'},
-         { label: 'Novembro', value: '11'},
-         { label: 'Dezembro', value: '12'},
-        ]
+    editar = (id) => {
+        console.log('editnado o lancamento ' + id);
+    }
 
-        const tipos = [
-            { label: 'Selecione..', value: ''},
-            { label: 'DESPESA', value: 'DESPESA'},
-            { label: 'RECEITA', value: 'RECEITA'},
-        ]
+    deletar = (id) => {
+        console.log('deletando o lancamento ' + id);
+    }
+
+    render(){
+        const mes = this.service.obterListaMeses();
+
+        const tipos = this.service.obterListaTipos();
 
         const lancamentos = [
             {id:1, descricao: 'Salário..', valor: 5000, mes:1, tipo: "Receita", status:'Efetivado'},
@@ -79,18 +77,26 @@ class ConsultaLancamento extends React.Component{
                         <div className="bs-component">
                             <FormGroup htmlFor="inputAno" label="Ano: *">
                                 <input type="text" className="form-control" 
-                                id="exampleInputEmail1"
+                                id="InputAno"
                                 value={this.state.ano}
                                 onChange={e => this.setState({ano: e.target.value})}
                                 placeholder="Digite o Ano" />
                             </FormGroup>
-                            
-                            <FormGroup htmlFor="inputMes" label="Mes: *">
+
+                            <FormGroup htmlFor="inputMes" label="Mês: *">
                                 <SelectMenu id="inputMes"
                                 className="form-control" 
                                 value={this.state.mes}
                                 onChange={e => this.setState({mes: e.target.value})}
                                 lista={mes} />
+                            </FormGroup>
+
+                            <FormGroup htmlFor="inputDesc" label="Descrição: *">
+                                <input type="text" className="form-control" 
+                                id="inputDesc"
+                                value={this.state.descricao}
+                                onChange={e => this.setState({descricao: e.target.value})}
+                                placeholder="Digite a Descrição" />
                             </FormGroup>
 
                             <FormGroup htmlFor="inputTipo" label="Tipo Lançamento: *">
@@ -111,7 +117,9 @@ class ConsultaLancamento extends React.Component{
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <LancamentoTable lancamentos={this.state.lancamentos}/>
+                            <LancamentoTable lancamentos={this.state.lancamentos}
+                            deleteAction={this.deletar}
+                            editAction={this.editar}/>
                         </div>
                     </div>
                 </div>

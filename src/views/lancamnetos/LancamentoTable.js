@@ -1,4 +1,5 @@
-import react from 'react';
+import React from 'react';
+import currencyFormatter from 'currency-formatter';
 
 export default props => {
 
@@ -6,10 +7,22 @@ export default props => {
         return(
             <tr key={lancamento.id}>
                 <th>{lancamento.descricao}</th>
-                <th>{lancamento.valor}</th>
+                <th>{currencyFormatter.format(lancamento.valor, {locale: 'pt-BR'})}</th>
                 <th>{lancamento.tipo}</th>
                 <th>{lancamento.mes}</th>
                 <th>{lancamento.status}</th>
+                <td>
+                    <button type="button"
+                    className="btn btn-primary"
+                    onClick={e => props.editAction(lancamento.id)}
+                    >Editar
+                    </button>
+                    <button type="button" 
+                    className="btn btn-danger"
+                    onClick={e => props.deleteAction(lancamento.id)}>
+                        Deletar
+                    </button>
+                </td>
             </tr>
         );
     });
