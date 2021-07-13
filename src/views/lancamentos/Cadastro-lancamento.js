@@ -18,7 +18,8 @@ class CadastroLancamentos extends React.Component{
         mes:'',
         ano:'',
         tipo:'',
-        status:''
+        status:'',
+        usuario:null
     }
 
     constructor(){
@@ -46,6 +47,18 @@ class CadastroLancamentos extends React.Component{
         const name = event.target.name;
 
         this.setState({[name]:value});
+    }
+
+    componentDidMount(){
+        const params = this.props.match.params;
+
+        if(params.id){
+            this.service.obterPorId(params.id).then(response => {
+                this.setState({...response.data});
+            }).catch(erro => {
+                messages.mensagemErro(erro.response.data);
+            });
+        }
     }
     
     render(){
