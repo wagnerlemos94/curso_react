@@ -1,6 +1,6 @@
 import React from 'react';
 import UsuarioSerice from '../app/service/usuarioService';
-import LocalStorageService from '../app/service/localStorageService';
+import {AuthContext} from '../main/ProvedorAutenticacao';
 
 
 class Home extends React.Component{
@@ -15,8 +15,7 @@ class Home extends React.Component{
     }
 
     componentDidMount(){
-        const usuarioLogado = LocalStorageService.obterItem('_usuario_logado');
-        
+        const usuarioLogado = this.context.usuarioAutenticado;
         this.usuarioService.obeterSaldoPorUsuario(usuarioLogado.id)
         .then(response => {
             this.setState({saldo:response.data});
@@ -47,5 +46,7 @@ class Home extends React.Component{
         );
     }
 }
+
+Home.contextType = AuthContext;
 
 export default Home;
